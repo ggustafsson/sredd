@@ -1,0 +1,12 @@
+{
+  "Command":"open",
+  "CommandArgs":[
+    "-a",
+    "Safari"
+  ],
+  "Subreddits":[
+    "golang",
+    "vim"
+  ],
+  "Comments":0
+}
