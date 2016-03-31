@@ -1,4 +1,4 @@
-// Version: 0.1
+// Version: 0.2
 // License: BSD 3-Clause
 // Creator: Göran Gustafsson (gustafsson.g at gmail.com)
 
