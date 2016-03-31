@@ -50,6 +50,7 @@ type Response struct {
 func CheckNew(name string, urls []string) (newURLs []string, err error) {
 	log := fmt.Sprintf("%s/r_%s.log", Config.ProgramPath, name)
 	var oldURLs []string
+	// Read log file and add URLs to array.
 	if _, err := os.Stat(log); err == nil {
 		file, err := os.Open(log)
 		if err != nil {
@@ -65,6 +66,7 @@ func CheckNew(name string, urls []string) (newURLs []string, err error) {
 		file.Close()
 	}
 
+	// Write all new URLs to log file.
 	file, err := os.Create(log)
 	defer file.Close()
 	if err != nil {
@@ -81,6 +83,7 @@ func CheckNew(name string, urls []string) (newURLs []string, err error) {
 		return nil, err
 	}
 
+	// Compare list of new and old URLs.
 	var dup int
 	for _, url := range urls {
 		dup = 0
@@ -120,8 +123,10 @@ func CheckSub(name string) (urls []string, err error) {
 	if err != nil {
 		return nil, err
 	}
+	// Loop over all Subreddits posts.
 	for _, item := range sub.Data.Children {
 		itemURL := item.Data.URL
+		// Filter discussion threads if Comments is disabled in config.
 		if Config.Comments == 0 && strings.Contains(itemURL, "/comments/") {
 			continue
 		}
@@ -140,7 +145,9 @@ func ExecCommand(urls []string) (err error) {
 	for _, url := range urls {
 		fmt.Printf("URL: %s\n", url)
 	}
+	// cmd contains the main command, e.g. "open".
 	cmd := Config.Command
+	// args contains all arguments used with cmd, e.g. "-a Safari <URL1> ...".
 	args := append(Config.CommandArgs, urls...)
 	err = exec.Command(cmd, args...).Run()
 	if err != nil {
@@ -155,6 +162,7 @@ func ReadConfig() (err error) {
 	if err != nil {
 		return err
 	}
+	// Location of config and log files, e.g. "~/.sredd/config.json".
 	Config.ProgramPath = fmt.Sprintf("%s/.sredd", usr.HomeDir)
 	path := fmt.Sprintf("%s/config.json", Config.ProgramPath)
 	file, err := os.Open(path)
@@ -176,11 +184,13 @@ func main() {
 	}
 	for index, name := range Config.Subreddits {
 		fmt.Printf("Checking r/%s for new posts...\n", name)
+		// Check subreddit and return all URLs.
 		urls, err := CheckSub(name)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed: %v\n", err)
 			os.Exit(1)
 		}
+		// Check which URLs are new compared to last run.
 		newURLs, err := CheckNew(name, urls)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "failed: %v\n", err)
@@ -188,6 +198,7 @@ func main() {
 		}
 		if len(newURLs) == 0 {
 			fmt.Println("No new posts found!")
+			// Only print newline if there are subreddits left.
 			if index != len(Config.Subreddits)-1 {
 				fmt.Println()
 			}
@@ -198,6 +209,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, "failed: %v\n", err)
 			os.Exit(1)
 		}
+		// Only wait for input if there are subreddits left.
 		if index == len(Config.Subreddits)-1 {
 			break
 		}
