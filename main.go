@@ -2,6 +2,7 @@
 // License: BSD 3-Clause
 // Creator: Göran Gustafsson (gustafsson.g at gmail.com)
 
+// sredd - s(ub)redd(it)
 package main
 
 import (
