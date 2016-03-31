@@ -58,6 +58,9 @@ func CheckNew(name string, urls []string) (newURLs []string, err error) {
 		for scanner.Scan() {
 			oldURLs = append(oldURLs, scanner.Text())
 		}
+		if err := scanner.Err(); err != nil {
+			return nil, err
+		}
 		file.Close()
 	}
 
@@ -73,7 +76,9 @@ func CheckNew(name string, urls []string) (newURLs []string, err error) {
 			return nil, err
 		}
 	}
-	writer.Flush()
+	if err := writer.Flush(); err != nil {
+		return nil, err
+	}
 
 	var dup int
 	for _, url := range urls {
