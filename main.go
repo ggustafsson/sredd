@@ -186,7 +186,7 @@ func ReadConfig() (err error) {
 func main() {
 	err := ReadConfig()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "ReadConfig() failed: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
 		os.Exit(1)
 	}
 	for index, name := range Config.Subreddits {
@@ -194,13 +194,13 @@ func main() {
 		// Check subreddit and return all URLs.
 		urls, err := CheckSub(name)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "CheckSub() failed: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Subreddit error: %v\n", err)
 			os.Exit(1)
 		}
 		// Check which URLs are new compared to last run.
 		newURLs, err := CheckNew(name, urls)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "CheckNew() failed: %v\n", err)
+			fmt.Fprintf(os.Stderr, "New posts error: %v\n", err)
 			os.Exit(1)
 		}
 		if len(newURLs) == 0 {
@@ -213,7 +213,7 @@ func main() {
 		}
 		err = ExecCommand(newURLs)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "ExecCommand() failed: %v\n", err)
+			fmt.Fprintf(os.Stderr, "Command error: %v\n", err)
 			os.Exit(1)
 		}
 		// Only wait for input if there are subreddits left.
