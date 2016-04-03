@@ -68,10 +68,10 @@ func CheckNew(name string, urls []string) (newURLs []string, err error) {
 
 	// Write all new URLs to log file.
 	file, err := os.Create(log)
-	defer file.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 	writer := bufio.NewWriter(file)
 	for _, url := range urls {
 		writer.WriteString(fmt.Sprintf("%s\n", url))
@@ -111,10 +111,10 @@ func CheckSub(name string) (urls []string, err error) {
 	// The most popular HTTP User-Agent as of 2016-03-28.
 	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36")
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New(resp.Status)
 	}
