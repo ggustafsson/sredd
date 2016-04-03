@@ -79,7 +79,8 @@ func CheckNew(name string, urls []string) (newURLs []string, err error) {
 			return nil, err
 		}
 	}
-	if err := writer.Flush(); err != nil {
+	err = writer.Flush()
+	if err != nil {
 		return nil, err
 	}
 
