@@ -174,6 +174,12 @@ func ReadConfig() (err error) {
 	if err != nil {
 		return err
 	}
+	if Config.Command == "" {
+		return errors.New("option 'Command' not set")
+	}
+	if len(Config.Subreddits) == 0 {
+		return errors.New("option 'Subreddits' not set")
+	}
 	return nil
 }
 
