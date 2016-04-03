@@ -8,5 +8,5 @@
     "golang",
     "vim"
   ],
-  "Comments":0
+  "FilterComments":1
 }

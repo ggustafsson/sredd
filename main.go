@@ -26,11 +26,11 @@ var Config Options
 
 // Options is a struct that defines all configuration values.
 type Options struct {
-	Command     string
-	CommandArgs []string
-	Comments    int
-	ProgramPath string
-	Subreddits  []string
+	Command        string
+	CommandArgs    []string
+	FilterComments int
+	ProgramPath    string
+	Subreddits     []string
 }
 
 // Response is a struct that defines the expected JSON response from Reddit.
@@ -127,8 +127,8 @@ func CheckSub(name string) (urls []string, err error) {
 	// Loop over all Subreddits posts.
 	for _, item := range sub.Data.Children {
 		itemURL := item.Data.URL
-		// Filter discussion threads if Comments is disabled in config.
-		if Config.Comments == 0 && strings.Contains(itemURL, "/comments/") {
+		// Filter discussion threads if FilterComments is disabled in config.
+		if Config.FilterComments == 1 && strings.Contains(itemURL, "/comments/") {
 			continue
 		}
 		// Make sure items always starts with either http:// or https://.
