@@ -20,6 +20,9 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
+const AppName = "sredd"
+const AppVersion = "0.3"
+
 // Config is a global variable containing current user and runtime settings.
 var Config Options
 
@@ -163,7 +166,7 @@ func ReadConfig() (err error) {
 		return err
 	}
 	// Location of config and log files, e.g. "~/.sredd/config.json".
-	Config.ProgramPath = fmt.Sprintf("%s/.sredd", usr.HomeDir)
+	Config.ProgramPath = fmt.Sprintf("%s/.%s", usr.HomeDir, AppName)
 	path := fmt.Sprintf("%s/config.json", Config.ProgramPath)
 	file, err := os.Open(path)
 	if err != nil {
