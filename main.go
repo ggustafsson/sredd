@@ -20,8 +20,11 @@ import (
 	"golang.org/x/crypto/ssh/terminal"
 )
 
-const AppName = "sredd"
-const AppVersion = "0.3"
+const (
+	AppName     = "sredd"
+	AppLongName = "s(ub)redd(it)"
+	AppVersion  = "0.3"
+)
 
 // Config is a global variable containing current user and runtime settings.
 var Config Options
