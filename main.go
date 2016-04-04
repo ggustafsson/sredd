@@ -21,16 +21,16 @@ import (
 )
 
 const (
-	AppName     = "sredd"
-	AppLongName = "s(ub)redd(it)"
-	AppVersion  = "0.3"
+	appName     = "sredd"
+	appLongName = "s(ub)redd(it)"
+	appVersion  = "0.3"
 )
 
-// Config is a global variable containing current user and runtime settings.
-var Config Options
+// config is a global variable containing current user and runtime settings.
+var config options
 
-// Options is a struct that defines all configuration values.
-type Options struct {
+// options is a struct that defines all configuration values.
+type options struct {
 	Command        string
 	CommandArgs    []string
 	FilterComments int
@@ -38,8 +38,8 @@ type Options struct {
 	Subreddits     []string
 }
 
-// Response is a struct that defines the expected JSON response from Reddit.
-type Response struct {
+// response is a struct that defines the expected JSON response from Reddit.
+type response struct {
 	Data struct {
 		Children []struct {
 			Data struct {
@@ -49,11 +49,11 @@ type Response struct {
 	}
 }
 
-// CheckNew reads in old URL's from log file (if such a file exists), creates a
+// checkNew reads in old URL's from log file (if such a file exists), creates a
 // new log file containing new URL's, and compares new and old URL lists.
 // Returns list of all new URL's.
-func CheckNew(name string, urls []string) (newURLs []string, err error) {
-	log := fmt.Sprintf("%s/r_%s.log", Config.ProgramPath, name)
+func checkNew(name string, urls []string) (newURLs []string, err error) {
+	log := fmt.Sprintf("%s/r_%s.log", config.ProgramPath, name)
 	var oldURLs []string
 	// Read log file and add URLs to array.
 	if _, err := os.Stat(log); err == nil {
@@ -105,8 +105,8 @@ func CheckNew(name string, urls []string) (newURLs []string, err error) {
 	return newURLs, nil
 }
 
-// CheckSub checks specific Subreddit for new posts. Returns list of URL's.
-func CheckSub(name string) (urls []string, err error) {
+// checkSub checks specific Subreddit for new posts. Returns list of URL's.
+func checkSub(name string) (urls []string, err error) {
 	url := fmt.Sprintf("https://reddit.com/r/%s.json", name)
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", url, nil)
@@ -124,7 +124,7 @@ func CheckSub(name string) (urls []string, err error) {
 		return nil, errors.New(resp.Status)
 	}
 
-	sub := new(Response)
+	sub := new(response)
 	err = json.NewDecoder(resp.Body).Decode(&sub)
 	if err != nil {
 		return nil, err
@@ -133,7 +133,7 @@ func CheckSub(name string) (urls []string, err error) {
 	for _, item := range sub.Data.Children {
 		itemURL := item.Data.URL
 		// Filter discussion threads if FilterComments is disabled in config.
-		if Config.FilterComments == 1 && strings.Contains(itemURL, "/comments/") {
+		if config.FilterComments == 1 && strings.Contains(itemURL, "/comments/") {
 			continue
 		}
 		// Make sure items always starts with either http:// or https://.
@@ -146,15 +146,15 @@ func CheckSub(name string) (urls []string, err error) {
 	return urls, nil
 }
 
-// ExecCommand prints out list of URL's and executes user specified command.
-func ExecCommand(urls []string) (err error) {
+// execCommand prints out list of URL's and executes user specified command.
+func execCommand(urls []string) (err error) {
 	for _, url := range urls {
 		fmt.Printf("URL: %s\n", url)
 	}
 	// cmd contains the main command, e.g. "open".
-	cmd := Config.Command
+	cmd := config.Command
 	// args contains all arguments used with cmd, e.g. "-a Safari <URL1> ...".
-	args := append(Config.CommandArgs, urls...)
+	args := append(config.CommandArgs, urls...)
 	err = exec.Command(cmd, args...).Run()
 	if err != nil {
 		return err
@@ -162,46 +162,46 @@ func ExecCommand(urls []string) (err error) {
 	return nil
 }
 
-// ReadConfig reads JSON config file and set values in struct variable Config.
-func ReadConfig() (err error) {
+// readConfig reads JSON config file and set values in struct variable config.
+func readConfig() (err error) {
 	usr, err := user.Current()
 	if err != nil {
 		return err
 	}
 	// Location of config and log files, e.g. "~/.sredd/config.json".
-	Config.ProgramPath = fmt.Sprintf("%s/.%s", usr.HomeDir, AppName)
-	path := fmt.Sprintf("%s/config.json", Config.ProgramPath)
+	config.ProgramPath = fmt.Sprintf("%s/.%s", usr.HomeDir, appName)
+	path := fmt.Sprintf("%s/config.json", config.ProgramPath)
 	file, err := os.Open(path)
 	if err != nil {
 		return err
 	}
-	err = json.NewDecoder(file).Decode(&Config)
+	err = json.NewDecoder(file).Decode(&config)
 	if err != nil {
 		return err
 	}
-	if Config.Command == "" {
+	if config.Command == "" {
 		return errors.New("option 'Command' not set")
 	}
-	if len(Config.Subreddits) == 0 {
+	if len(config.Subreddits) == 0 {
 		return errors.New("option 'Subreddits' not set")
 	}
 	return nil
 }
 
-// Usage prints out information about how to use the program.
-func Usage() {
+// usage prints out information about how to use the program.
+func usage() {
 	info := `
 Options:
     -h, --help       Display this help text
     -v, --version    Display version information
 `
 
-	fmt.Printf("Usage: %s [OPTION]\n", AppName)
+	fmt.Printf("Usage: %s [OPTION]\n", appName)
 	fmt.Printf("%s", info)
 }
 
-// Version prints out various information about the program.
-func Version() {
+// version prints out various information about the program.
+func version() {
 	info := `
 Web: https://github.com/ggustafsson/sredd
 Git: https://github.com/ggustafsson/sredd.git
@@ -210,7 +210,7 @@ Written by Göran Gustafsson <gustafsson.g@gmail.com>
 Released under the BSD 3-Clause license
 `
 
-	fmt.Printf("%s - %s, version %s\n", AppName, AppLongName, AppVersion)
+	fmt.Printf("%s - %s, version %s\n", appName, appLongName, appVersion)
 	fmt.Printf("%s", info)
 }
 
@@ -219,20 +219,20 @@ func init() {
 	if len(os.Args[1:]) == 1 {
 		switch os.Args[1] {
 		case "-h", "--help":
-			Usage()
+			usage()
 		case "-v", "--version":
-			Version()
+			version()
 		default:
-			Usage()
+			usage()
 			os.Exit(1)
 		}
 		os.Exit(0)
 	} else if len(os.Args[1:]) >= 2 {
-		Usage()
+		usage()
 		os.Exit(1)
 	}
 
-	err := ReadConfig()
+	err := readConfig()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
 		os.Exit(1)
@@ -240,16 +240,16 @@ func init() {
 }
 
 func main() {
-	for index, name := range Config.Subreddits {
+	for index, name := range config.Subreddits {
 		fmt.Printf("Checking r/%s for new posts...\n", name)
 		// Check subreddit and return all URLs.
-		urls, err := CheckSub(name)
+		urls, err := checkSub(name)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Subreddit error: %v\n", err)
 			os.Exit(1)
 		}
 		// Check which URLs are new compared to last run.
-		newURLs, err := CheckNew(name, urls)
+		newURLs, err := checkNew(name, urls)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "New posts error: %v\n", err)
 			os.Exit(1)
@@ -257,18 +257,18 @@ func main() {
 		if len(newURLs) == 0 {
 			fmt.Println("No new posts found!")
 			// Only print newline if there are subreddits left.
-			if index != len(Config.Subreddits)-1 {
+			if index != len(config.Subreddits)-1 {
 				fmt.Println()
 			}
 			continue
 		}
-		err = ExecCommand(newURLs)
+		err = execCommand(newURLs)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Command error: %v\n", err)
 			os.Exit(1)
 		}
 		// Only wait for input if there are subreddits left.
-		if index == len(Config.Subreddits)-1 {
+		if index == len(config.Subreddits)-1 {
 			break
 		}
 		fmt.Printf("Press 'Return' key when ready to continue...")
