@@ -188,12 +188,58 @@ func ReadConfig() (err error) {
 	return nil
 }
 
-func main() {
+// Usage prints out information about how to use the program.
+func Usage() {
+	info := `
+Options:
+    -h, --help       Display this help text
+    -v, --version    Display version information
+`
+
+	fmt.Printf("Usage: %s [OPTION]\n", AppName)
+	fmt.Printf("%s", info)
+}
+
+// Version prints out various information about the program.
+func Version() {
+	info := `
+Web: https://github.com/ggustafsson/sredd
+Git: https://github.com/ggustafsson/sredd.git
+
+Written by Göran Gustafsson <gustafsson.g@gmail.com>
+Released under the BSD 3-Clause license
+`
+
+	fmt.Printf("%s - %s, version %s\n", AppName, AppLongName, AppVersion)
+	fmt.Printf("%s", info)
+}
+
+func init() {
+	// Only accept one single argument, or none at all.
+	if len(os.Args[1:]) == 1 {
+		switch os.Args[1] {
+		case "-h", "--help":
+			Usage()
+		case "-v", "--version":
+			Version()
+		default:
+			Usage()
+			os.Exit(1)
+		}
+		os.Exit(0)
+	} else if len(os.Args[1:]) >= 2 {
+		Usage()
+		os.Exit(1)
+	}
+
 	err := ReadConfig()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+func main() {
 	for index, name := range Config.Subreddits {
 		fmt.Printf("Checking r/%s for new posts...\n", name)
 		// Check subreddit and return all URLs.
