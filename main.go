@@ -1,6 +1,5 @@
-// Version: 0.3
-// License: BSD 3-Clause
 // Creator: Göran Gustafsson (gustafsson.g at gmail.com)
+// License: BSD 3-Clause
 
 // sredd - s(ub)redd(it)
 package main
