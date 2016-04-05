@@ -88,8 +88,7 @@ func checkNew(name string, urls []string) (newURLs []string, err error) {
 	if err != nil {
 		return nil, err
 	}
-
-	// Compare list of new and old URLs.
+	// Compare list of new and old URL's.
 	var dup int
 	for _, url := range urls {
 		dup = 0
@@ -123,7 +122,6 @@ func checkSub(name string) (urls []string, err error) {
 	if resp.StatusCode != http.StatusOK {
 		return nil, errors.New(resp.Status)
 	}
-
 	sub := new(response)
 	err = json.NewDecoder(resp.Body).Decode(&sub)
 	if err != nil {
@@ -230,6 +228,7 @@ func init() {
 		os.Exit(1)
 	}
 
+	// Load configuration file so program can run.
 	err := readConfig()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Config error: %v\n", err)
@@ -240,13 +239,13 @@ func init() {
 func main() {
 	for index, name := range config.Subreddits {
 		fmt.Printf("Checking r/%s for new posts...\n", name)
-		// Check subreddit and return all URLs.
+		// Check subreddit and return all URL's.
 		urls, err := checkSub(name)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Subreddit error: %v\n", err)
 			os.Exit(1)
 		}
-		// Check which URLs are new compared to last run.
+		// Check which URL's are new compared to last run.
 		newURLs, err := checkNew(name, urls)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "New posts error: %v\n", err)
