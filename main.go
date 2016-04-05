@@ -54,7 +54,7 @@ type response struct {
 // Returns list of all new URL's.
 func checkNew(name string, urls []string) (newURLs []string, err error) {
 	log := fmt.Sprintf("%s/r_%s.log", config.ProgramPath, name)
-	var oldURLs []string
+	oldURLs := make([]string, 0, 25)
 	// Read log file and add URLs to array.
 	if _, err := os.Stat(log); err == nil {
 		file, err := os.Open(log)
