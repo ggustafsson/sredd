@@ -49,42 +49,17 @@ type response struct {
 	}
 }
 
-// checkNew reads in old URL's from log file (if such a file exists), creates a
-// new log file containing new URL's, and compares new and old URL lists.
+// checkNew runs logRead and logWrite, and then compares new and old URL lists.
 // Returns list of all new URL's.
 func checkNew(name string, urls []string) (newURLs []string, err error) {
 	log := fmt.Sprintf("%s/r_%s.log", config.ProgramPath, name)
-	oldURLs := make([]string, 0, 25)
-	// Read log file and add URLs to array.
-	if _, err := os.Stat(log); err == nil {
-		file, err := os.Open(log)
-		if err != nil {
-			return nil, err
-		}
-		scanner := bufio.NewScanner(file)
-		for scanner.Scan() {
-			oldURLs = append(oldURLs, scanner.Text())
-		}
-		if err := scanner.Err(); err != nil {
-			return nil, err
-		}
-		file.Close()
-	}
-
-	// Write all new URLs to log file.
-	file, err := os.Create(log)
+	// Read log file from last run if it exists.
+	oldURLs, err := logRead(log)
 	if err != nil {
 		return nil, err
 	}
-	defer file.Close()
-	writer := bufio.NewWriter(file)
-	for _, url := range urls {
-		writer.WriteString(fmt.Sprintf("%s\n", url))
-		if err != nil {
-			return nil, err
-		}
-	}
-	err = writer.Flush()
+	// Write log file with the latest URL's.
+	err = logWrite(log, urls)
 	if err != nil {
 		return nil, err
 	}
@@ -154,6 +129,46 @@ func execCommand(urls []string) (err error) {
 	// args contains all arguments used with cmd, e.g. "-a Safari <URL1> ...".
 	args := append(config.CommandArgs, urls...)
 	err = exec.Command(cmd, args...).Run()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// logRead reads log file, if it exists, and returns all URL's.
+func logRead(log string) (oldURLs []string, err error) {
+	if _, err := os.Stat(log); err == nil {
+		file, err := os.Open(log)
+		if err != nil {
+			return nil, err
+		}
+		defer file.Close()
+		scanner := bufio.NewScanner(file)
+		for scanner.Scan() {
+			oldURLs = append(oldURLs, scanner.Text())
+		}
+		if err := scanner.Err(); err != nil {
+			return nil, err
+		}
+	}
+	return oldURLs, nil
+}
+
+// logWrite writes down all new URL's to log file.
+func logWrite(log string, urls []string) (err error) {
+	file, err := os.Create(log)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	writer := bufio.NewWriter(file)
+	for _, url := range urls {
+		writer.WriteString(fmt.Sprintf("%s\n", url))
+		if err != nil {
+			return err
+		}
+	}
+	err = writer.Flush()
 	if err != nil {
 		return err
 	}
