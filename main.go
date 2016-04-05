@@ -33,7 +33,7 @@ var config options
 type options struct {
 	Command        string
 	CommandArgs    []string
-	FilterComments int
+	FilterComments bool
 	ProgramPath    string
 	Subreddits     []string
 }
@@ -133,7 +133,7 @@ func checkSub(name string) (urls []string, err error) {
 	for _, item := range sub.Data.Children {
 		itemURL := item.Data.URL
 		// Filter discussion threads if FilterComments is disabled in config.
-		if config.FilterComments == 1 && strings.Contains(itemURL, "/comments/") {
+		if config.FilterComments && strings.Contains(itemURL, "/comments/") {
 			continue
 		}
 		// Make sure items always starts with either http:// or https://.
