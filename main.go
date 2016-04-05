@@ -195,7 +195,6 @@ Options:
     -h, --help       Display this help text
     -v, --version    Display version information
 `
-
 	fmt.Printf("Usage: %s [OPTION]\n", appName)
 	fmt.Printf("%s", info)
 }
@@ -209,7 +208,6 @@ Git: https://github.com/ggustafsson/sredd.git
 Written by Göran Gustafsson <gustafsson.g@gmail.com>
 Released under the BSD 3-Clause license
 `
-
 	fmt.Printf("%s - %s, version %s\n", appName, appLongName, appVersion)
 	fmt.Printf("%s", info)
 }
