@@ -87,8 +87,9 @@ func checkSub(name string) (urls []string, err error) {
 	if err != nil {
 		return nil, err
 	}
-	// The most popular HTTP User-Agent as of 2016-03-28.
-	req.Header.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36")
+	// Program identifying user-agent string is used to fulfill API rules.
+	agent := fmt.Sprintf("unix:%s:v%s (by /u/ggustafsson)", appName, appVersion)
+	req.Header.Add("User-Agent", agent)
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, err
