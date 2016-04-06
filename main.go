@@ -81,8 +81,8 @@ func checkNew(name string, urls []string) (newURLs []string, err error) {
 
 // checkSub checks specific Subreddit for new posts. Returns list of URL's.
 func checkSub(name string) (urls []string, err error) {
-	url := fmt.Sprintf("https://reddit.com/r/%s.json", name)
 	client := &http.Client{}
+	url := fmt.Sprintf("https://www.reddit.com/r/%s.json", name)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
