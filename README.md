@@ -23,9 +23,11 @@ If you don't already use Go:
 
 1. Install Go (apt-get/brew install golang)
 2. Setup environment
+
     mkdir ~/Golang
     export GOPATH=~/Golang
     export PATH="${GOPATH}:$PATH"
+
 3. Add export commands to shell config
 4. Install program
     go get github.com/ggustafsson/sredd
@@ -39,13 +41,15 @@ Configuration
 Usage
 -----
     sredd
+
 or
+
     sredd --help
 
 Dependencies
 ------------
-Go
-Web browser
+- Go
+- Web browser
 
 License
 -------
