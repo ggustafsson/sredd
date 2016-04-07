@@ -1,9 +1,51 @@
 sredd - s(ub)redd(it)
 =====================
 
+![Preview](https://github.com/ggustafsson/sredd/raw/master/Preview.png)
+
 Description
 -----------
-Coming soon...
+sredd is a program that makes it extraordinarily easy to view subreddits, you
+will agree even if you are extraordinarliy lazy! Edit config, specify browser
+command & args, specify subreddit's, specify if you want comments or not, and
+then you are done. sredd will look for subreddit posts and open them up in your
+browser of choice, the next time sredd runs it will only open up new posts.
+
+sredd is written in Go <3
+
+Installation
+------------
+If you already use Go:
+
+    go get github.com/ggustafsson/sredd
+
+If you don't already use Go:
+
+1. Install Go (apt-get/brew install golang)
+2. Setup environment
+    mkdir ~/Golang
+    export GOPATH=~/Golang
+    export PATH="${GOPATH}:$PATH"
+3. Add export commands to shell config
+4. Install program
+    go get github.com/ggustafsson/sredd
+
+Configuration
+-------------
+    mkdir ~/.sredd
+    cp ${GOPATH}/src/github.com/ggustafsson/sredd/config.json ~/.sredd/config.json
+    vim ~/.config.json
+
+Usage
+-----
+    sredd
+or
+    sredd --help
+
+Dependencies
+------------
+Go
+Web browser
 
 License
 -------
