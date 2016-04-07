@@ -224,6 +224,8 @@ func readConfig() (err error) {
 // usage prints out information about how to use the program.
 func usage() {
 	info := `
+Run without arguments to check subreddit's specified in config.
+
 Options:
     -h, --help       Display this help text
     -v, --version    Display version information
