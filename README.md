@@ -21,15 +21,11 @@ If you already use Go:
 
 If you don't already use Go:
 
-1. Install Go (apt-get/brew install golang)
-2. Setup environment
-
+    # Install Go (apt-get/brew install golang)
     mkdir ~/Golang
     export GOPATH=~/Golang
     export PATH="${GOPATH}:$PATH"
-
-3. Add export commands to shell config
-4. Install program
+    # Add export commands to shell config
     go get github.com/ggustafsson/sredd
 
 Configuration
