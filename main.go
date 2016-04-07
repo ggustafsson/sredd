@@ -16,6 +16,7 @@ import (
 	"regexp"
 	"strings"
 	"syscall"
+	"time"
 
 	"golang.org/x/crypto/ssh/terminal"
 )
@@ -81,8 +82,26 @@ func checkNew(name string, urls []string) (newURLs []string, err error) {
 
 // checkSub checks specific Subreddit for new posts. Returns list of URL's.
 func checkSub(name string) (urls []string, err error) {
-	client := &http.Client{}
 	url := fmt.Sprintf("https://www.reddit.com/r/%s.json", name)
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+	// Limit number of redirects and keep HTTP header at redirect (User-Agent).
+	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
+		// Check number of redirects.
+		if len(via) == 0 {
+			return nil
+		}
+		// Return error after three redirects.
+		if len(via) > 3 {
+			return fmt.Errorf("%d consecutive redirects", len(via))
+		}
+		// Duplicate HTTP header fields..
+		for key, val := range via[0].Header {
+			req.Header[key] = val
+		}
+		return nil
+	}
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
