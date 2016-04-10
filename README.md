@@ -24,7 +24,7 @@ If you don't already use Go:
     # Install Go (apt-get/brew install golang)
     mkdir ~/Golang
     export GOPATH=~/Golang
-    export PATH="${GOPATH}:$PATH"
+    export PATH="${GOPATH}/bin:$PATH"
     # Add export commands to shell config
     go get github.com/ggustafsson/sredd
 
@@ -32,7 +32,7 @@ Configuration
 -------------
     mkdir ~/.sredd
     cp ${GOPATH}/src/github.com/ggustafsson/sredd/config.json ~/.sredd/config.json
-    vim ~/.config.json
+    vim ~/.sredd/config.json
 
 Usage
 -----
