@@ -183,7 +183,7 @@ func logWrite(log string, urls []string) (err error) {
 	defer file.Close()
 	writer := bufio.NewWriter(file)
 	for _, url := range urls {
-		writer.WriteString(fmt.Sprintf("%s\n", url))
+		_, err = writer.WriteString(fmt.Sprintf("%s\n", url))
 		if err != nil {
 			return err
 		}
