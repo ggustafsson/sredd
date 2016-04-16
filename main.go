@@ -306,7 +306,12 @@ func main() {
 			break
 		}
 		fmt.Printf("Press 'Return' key when ready to continue...")
-		terminal.ReadPassword(int(syscall.Stdin))
-		fmt.Printf("\n\n")
+		_, err = terminal.ReadPassword(int(syscall.Stdin))
+		fmt.Println()
+		if err != nil {
+			fmt.Println("Reading input failed! Sleeping 10 seconds.")
+			time.Sleep(10 * time.Second)
+		}
+		fmt.Println()
 	}
 }
