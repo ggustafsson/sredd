@@ -157,7 +157,7 @@ func execCommand(urls []string) (err error) {
 
 // logRead reads log file, if it exists, and returns all URL's.
 func logRead(log string) (oldURLs []string, err error) {
-	if _, err := os.Stat(log); err == nil {
+	if _, err = os.Stat(log); err == nil {
 		file, err := os.Open(log)
 		if err != nil {
 			return nil, err
@@ -167,7 +167,7 @@ func logRead(log string) (oldURLs []string, err error) {
 		for scanner.Scan() {
 			oldURLs = append(oldURLs, scanner.Text())
 		}
-		if err := scanner.Err(); err != nil {
+		if err = scanner.Err(); err != nil {
 			return nil, err
 		}
 	}
