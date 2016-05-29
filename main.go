@@ -134,6 +134,9 @@ func checkSub(name string) (urls []string, err error) {
 		if match == false {
 			continue
 		}
+		// Reddit fucks up URL's in JSON response. Replace "&amp" with "&".
+		// https://i.reddituploads.com never works without this :(
+		itemURL = strings.Replace(itemURL, "&amp;", "&", -1)
 		urls = append(urls, itemURL)
 	}
 	return urls, nil
