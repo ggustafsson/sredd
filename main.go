@@ -84,7 +84,7 @@ func checkNew(name string, urls []string) (newURLs []string, err error) {
 func checkSub(name string) (urls []string, err error) {
 	url := fmt.Sprintf("https://www.reddit.com/r/%s.json", name)
 	client := &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: 20 * time.Second,
 	}
 	// Limit number of redirects and keep HTTP header at redirect (User-Agent).
 	client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
