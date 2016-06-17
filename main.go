@@ -24,7 +24,7 @@ import (
 const (
 	appName     = "sredd"
 	appLongName = "s(ub)redd(it)"
-	appVersion  = "0.8"
+	appVersion  = "0.9"
 )
 
 // config is a global variable containing current user and runtime settings.
