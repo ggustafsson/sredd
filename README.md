@@ -1,5 +1,5 @@
-sredd - s(ub)redd(it)
-=====================
+sredd - s(ub)redd(it) (Abandoned)
+=================================
 
 ![Preview](https://github.com/ggustafsson/sredd/raw/master/Preview.png)
 
