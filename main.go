@@ -18,13 +18,13 @@ import (
 	"syscall"
 	"time"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 const (
 	appName     = "sredd"
 	appLongName = "s(ub)redd(it)"
-	appVersion  = "0.9"
+	appVersion  = "0.9.1"
 )
 
 // config is a global variable containing current user and runtime settings.
@@ -131,7 +131,7 @@ func checkSub(name string) (urls []string, err error) {
 		}
 		// Make sure items always starts with either http:// or https://.
 		match, _ := regexp.MatchString("^https?://", itemURL)
-		if match == false {
+		if !match {
 			continue
 		}
 		// Reddit fucks up URL's in JSON response. Replace "&amp" with "&".
@@ -309,7 +309,7 @@ func main() {
 			break
 		}
 		fmt.Printf("Press 'Return' key when ready to continue...")
-		_, err = terminal.ReadPassword(int(syscall.Stdin))
+		_, err = term.ReadPassword(int(syscall.Stdin))
 		fmt.Println()
 		if err != nil {
 			fmt.Println("Reading input failed! Sleeping 10 seconds.")
